@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazed Creative</title>
+    <meta name="description" content="We build autonomous agent systems for businesses.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#000;--text:#fff;--dim:#888;--muted:#444;--faint:#222;--accent:#4ed6a4;--deep:#060a14;--nebula:rgba(15,20,40,.4)}
+        html{scroll-behavior:smooth;background:#000}
+        body{
+            font-family:'Sora',sans-serif;
+            background:var(--deep);
+            background-image:
+                radial-gradient(ellipse 120% 60% at 50% 0%, rgba(8,14,30,.9) 0%, transparent 70%),
+                radial-gradient(ellipse 80% 40% at 20% 50%, rgba(12,8,28,.3) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 40% at 80% 80%, rgba(6,12,24,.4) 0%, transparent 60%),
+                linear-gradient(180deg, #030608 0%, #060a14 30%, #080c18 60%, #040810 100%);
+            background-attachment:fixed;
+            color:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+        }
+
+        /* ═══ PERSISTENT STAR FIELD ═══ */
+        #starField{
+            position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+        }
+
+        /* ═══ NAV ═══ */
+        nav{
+            position:fixed;top:0;left:0;right:0;z-index:100;
+            padding:0 2.5rem;height:56px;
+            display:flex;justify-content:space-between;align-items:center;
+            background:transparent;transition:background .5s;
+        }
+        nav.scrolled{background:rgba(4,6,12,.88);backdrop-filter:blur(20px)}
+        .nav-brand{
+            font-weight:600;font-size:.6rem;letter-spacing:.22em;
+            text-transform:uppercase;color:#fff;text-decoration:none;
+            opacity:.6;transition:opacity .3s;
+        }
+        .nav-brand:hover{opacity:1}
+        .nav-right{display:flex;align-items:center;gap:2.5rem}
+        .nav-links{display:flex;gap:2rem}
+        .nav-links a{
+            font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;
+            color:var(--muted);text-decoration:none;transition:color .3s;font-weight:400;
+        }
+        .nav-links a:hover{color:var(--dim)}
+        .nav-live{
+            display:flex;align-items:center;gap:.4rem;
+            font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+        }
+        .nav-dot{
+            width:5px;height:5px;border-radius:50%;background:var(--accent);
+            box-shadow:0 0 10px rgba(78,214,164,.6);animation:pulse 3s ease-in-out infinite;
+        }
+        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+        /* ═══ PANELS ═══ */
+        .panel{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+
+        /* ═══ HERO ═══ */
+        .hero{padding:0}
+        #heroCanvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+        .hero-content{
+            position:relative;z-index:2;
+            max-width:520px;padding:0 3rem;
+            margin-right:auto;margin-left:8vw;
+        }
+        .hero-statement{
+            font-size:clamp(1rem,1.5vw,1.2rem);font-weight:300;
+            color:var(--dim);line-height:1.9;letter-spacing:.01em;
+        }
+        .hero-statement strong{color:#fff;font-weight:500}
+        .hero-location{
+            display:block;margin-top:1.8rem;
+            font-family:'JetBrains Mono',monospace;
+            font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;
+            color:var(--muted);opacity:.6;
+        }
+        .hero-location::before{
+            content:'';display:inline-block;width:12px;height:1px;
+            background:var(--muted);margin-right:.6rem;vertical-align:middle;
+        }
+        .hero-cta{
+            display:inline-flex;align-items:center;gap:.5rem;
+            margin-top:2.5rem;font-size:.65rem;letter-spacing:.12em;
+            text-transform:uppercase;color:var(--muted);
+            text-decoration:none;transition:color .4s;
+        }
+        .hero-cta:hover{color:var(--dim)}
+        .hero-cta svg{width:14px;height:14px;transition:transform .3s}
+        .hero-cta:hover svg{transform:translateX(3px)}
+        .scroll-line{
+            position:absolute;bottom:0;left:50%;width:1px;height:60px;
+            background:linear-gradient(transparent,rgba(30,40,60,.5));
+        }
+
+        /* ═══ SECTION DIVIDERS — orbital horizon ═══ */
+        .orbital-divide{
+            position:relative;
+            border-top:1px solid transparent;
+            border-image:linear-gradient(90deg, transparent 0%, rgba(30,40,70,.5) 20%, rgba(40,50,80,.3) 50%, rgba(30,40,70,.5) 80%, transparent 100%) 1;
+        }
+        .orbital-divide::before{
+            content:'';position:absolute;top:-1px;left:0;right:0;height:1px;
+            background:linear-gradient(90deg, transparent, rgba(78,214,164,.06) 30%, rgba(78,214,164,.03) 50%, rgba(78,214,164,.06) 70%, transparent);
+        }
+
+        /* ═══ SYSTEMS ═══ */
+        .systems-header{padding:4rem 3rem 0}
+        .systems-label{
+            font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+        }
+        .systems-grid{
+            display:grid;grid-template-columns:1fr 1fr;
+        }
+        .sys-card{
+            border-bottom:1px solid rgba(30,40,60,.4);
+            border-right:1px solid rgba(30,40,60,.4);
+            padding:3.5rem 3rem;
+            transition:background .4s;cursor:default;
+            display:flex;flex-direction:column;justify-content:space-between;
+            min-height:320px;
+        }
+        .sys-card:nth-child(2n){border-right:none}
+        .sys-card:hover{background:rgba(15,20,40,.3)}
+        .sys-card-top{}
+        .sys-card-num{
+            font-family:'JetBrains Mono',monospace;font-size:.55rem;
+            color:rgba(30,40,60,.6);letter-spacing:.06em;margin-bottom:1.5rem;
+        }
+        .sys-card h3{
+            font-size:clamp(1.5rem,2.8vw,2rem);font-weight:300;
+            letter-spacing:-.02em;line-height:1.15;margin-bottom:.8rem;
+        }
+        .sys-card h3 strong{font-weight:700}
+        .sys-card p{
+            font-size:.9rem;color:var(--dim);font-weight:300;
+            line-height:1.7;max-width:440px;
+        }
+        .sys-card-bottom{margin-top:2rem}
+        .sys-tag{
+            display:inline-block;
+            font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--muted);border:1px solid rgba(30,40,60,.5);
+            padding:.35rem .7rem;margin:.2rem .2rem 0 0;
+        }
+
+        /* ═══ APPLICATIONS ═══ */
+        .applications-header{padding:4rem 3rem 2rem}
+        .applications-label{
+            font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+        }
+        .applications-sub{
+            font-size:.9rem;color:var(--dim);font-weight:300;margin-top:.5rem;line-height:1.7;
+            max-width:600px;
+        }
+        .app-grid{
+            display:grid;grid-template-columns:repeat(4,1fr);
+        }
+        .app-item{
+            border-bottom:1px solid rgba(30,40,60,.4);border-right:1px solid rgba(30,40,60,.4);
+            padding:1.8rem 2rem;transition:background .4s;cursor:default;
+        }
+        a.app-item{text-decoration:none;color:inherit;cursor:pointer;display:block}
+        .app-item:nth-child(4n){border-right:none}
+        .app-item:hover{background:rgba(15,20,40,.3)}
+        a.app-item:hover{background:rgba(78,214,164,.03)}
+        .app-item h4{
+            font-size:.85rem;font-weight:500;margin-bottom:.3rem;letter-spacing:-.01em;
+        }
+        .app-item p{
+            font-size:.75rem;color:var(--dim);font-weight:300;line-height:1.6;
+        }
+        .app-item .app-cat{
+            font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.1em;
+            text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;display:block;
+        }
+        /* Space-related applications get a subtle accent indicator */
+        .app-item.space-adjacent{
+            border-left:2px solid rgba(78,214,164,.12);
+        }
+        .app-item.space-adjacent .app-cat{
+            color:rgba(78,214,164,.4);
+        }
+
+        /* ═══ FINDINGS ═══ */
+        .findings-header{padding:4rem 3rem 0}
+        .findings-label{
+            font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+        }
+        .findings-sub{
+            font-size:.7rem;color:var(--muted);font-weight:300;margin-top:.4rem;
+        }
+        .finding{
+            display:grid;grid-template-columns:1fr 1fr;
+            min-height:70vh;border-bottom:1px solid rgba(30,40,60,.4);
+        }
+        .finding-text{
+            display:flex;flex-direction:column;justify-content:center;
+            padding:4rem 3rem;
+        }
+        .finding-type{
+            font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
+            color:var(--muted);margin-bottom:1.2rem;
+        }
+        .finding-text h2{
+            font-size:clamp(1.6rem,3vw,2.4rem);font-weight:300;
+            letter-spacing:-.02em;line-height:1.25;
+        }
+        .finding-text h2 strong{font-weight:700}
+        .finding-text p{
+            margin-top:1.2rem;font-size:.95rem;color:var(--dim);
+            font-weight:300;line-height:1.8;max-width:480px;
+        }
+        .finding-data{
+            display:flex;align-items:center;justify-content:center;padding:3rem;
+        }
+        .finding-num{
+            font-size:clamp(6rem,14vw,12rem);font-weight:800;
+            letter-spacing:-.06em;line-height:1;color:#fff;
+        }
+        .finding-num-sub{
+            font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;
+            color:var(--muted);margin-top:.5rem;text-align:center;
+        }
+
+        /* ═══ NEWSLETTER ═══ */
+        .newsletter{
+            padding:6rem 3rem;
+            display:flex;flex-direction:column;align-items:center;
+            text-align:center;
+        }
+        .nl-heading{
+            font-size:clamp(1.8rem,4vw,3rem);font-weight:200;
+            letter-spacing:-.03em;line-height:1.1;margin-bottom:.6rem;
+        }
+        .nl-heading strong{font-weight:700}
+        .nl-sub{
+            font-size:.95rem;font-weight:300;color:var(--dim);
+            max-width:420px;line-height:1.7;margin-bottom:2rem;
+        }
+        .nl-form{display:flex;gap:0}
+        .nl-form input{
+            font-family:'Sora',sans-serif;font-size:.8rem;font-weight:300;
+            background:rgba(8,12,24,.5);border:1px solid rgba(30,40,60,.5);
+            color:#fff;padding:.7rem 1rem;outline:none;width:260px;
+            transition:border-color .3s;
+        }
+        .nl-form input::placeholder{color:var(--muted)}
+        .nl-form input:focus{border-color:rgba(78,214,164,.3)}
+        .nl-form button{
+            font-family:'Sora',sans-serif;font-size:.65rem;letter-spacing:.08em;
+            text-transform:uppercase;font-weight:400;
+            background:rgba(8,12,24,.5);border:1px solid rgba(30,40,60,.5);border-left:none;
+            color:var(--muted);padding:.7rem 1.2rem;cursor:pointer;transition:all .3s;
+        }
+        .nl-form button:hover{color:#fff;border-color:rgba(78,214,164,.3)}
+        .nl-note{margin-top:1rem;font-size:.7rem;color:var(--muted);font-weight:300}
+
+        /* ═══ BUILD ═══ */
+        .build{
+            flex-direction:column;gap:1.5rem;
+            padding:2rem;
+        }
+        .build h2{
+            font-size:clamp(3.5rem,9vw,7rem);font-weight:800;
+            letter-spacing:-.05em;text-transform:uppercase;text-align:center;
+            background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.15));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            line-height:.95;
+        }
+        .build p{
+            font-size:1rem;font-weight:300;color:var(--muted);
+            text-align:center;max-width:460px;line-height:1.8;
+        }
+        .build-location{
+            font-family:'JetBrains Mono',monospace;
+            font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;
+            color:var(--muted);opacity:.5;text-align:center;
+        }
+        .build-cta{
+            display:inline-flex;align-items:center;gap:.6rem;
+            margin-top:1.5rem;font-size:.65rem;letter-spacing:.1em;
+            text-transform:uppercase;color:var(--muted);
+            text-decoration:none;transition:color .4s;
+            border:1px solid rgba(30,40,60,.5);padding:.7rem 1.8rem;
+        }
+        .build-cta:hover{color:#fff;border-color:rgba(78,214,164,.3)}
+        .build-cta svg{width:12px;height:12px;transition:transform .3s}
+        .build-cta:hover svg{transform:translateX(3px)}
+
+        /* ═══ FOOTER ═══ */
+        footer{
+            border-top:1px solid transparent;
+            border-image:linear-gradient(90deg, transparent, rgba(30,40,60,.4) 30%, rgba(30,40,60,.4) 70%, transparent) 1;
+            padding:1.5rem 3rem;
+            display:flex;justify-content:space-between;align-items:center;
+        }
+        footer span{font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(30,40,60,.6)}
+        footer a{color:rgba(30,40,60,.6);text-decoration:none;transition:color .3s}
+        footer a:hover{color:var(--muted)}
+        .footer-location{
+            font-family:'JetBrains Mono',monospace;
+            font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--muted);opacity:.7;
+        }
+
+        /* ═══ REVEAL ═══ */
+        .rv{opacity:0;transform:translateY(20px);transition:opacity 1s cubic-bezier(0.16,1,0.3,1),transform 1s cubic-bezier(0.16,1,0.3,1)}
+        .rv.v{opacity:1;transform:translateY(0)}
+
+        /* ═══ MOBILE ═══ */
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;width:22px;height:14px;position:relative}
+        .nav-toggle span{display:block;width:100%;height:1px;background:var(--muted);position:absolute;left:0;transition:all .3s}
+        .nav-toggle span:nth-child(1){top:0}.nav-toggle span:nth-child(2){top:6px}.nav-toggle span:nth-child(3){top:12px}
+        .nav-toggle.active span:nth-child(1){top:6px;transform:rotate(45deg)}
+        .nav-toggle.active span:nth-child(2){opacity:0}
+        .nav-toggle.active span:nth-child(3){top:6px;transform:rotate(-45deg)}
+        @media(max-width:900px){
+            .hero-content{margin-left:3vw}
+            .systems-grid{grid-template-columns:1fr}
+            .sys-card{border-right:none}
+            .app-grid{grid-template-columns:1fr 1fr}
+            .app-item:nth-child(4n){border-right:1px solid rgba(30,40,60,.4)}
+            .app-item:nth-child(2n){border-right:none}
+            .finding{grid-template-columns:1fr;min-height:auto}
+            .finding-data{padding:2rem 3rem 4rem}
+        }
+        @media(max-width:768px){
+            nav{padding:0 1.5rem}
+            .nav-links{
+                position:fixed;top:0;right:-100%;width:200px;height:100vh;
+                flex-direction:column;justify-content:center;
+                background:rgba(4,6,12,.97);backdrop-filter:blur(30px);
+                border-left:1px solid rgba(30,40,60,.4);transition:right .3s;padding:2rem;gap:1.5rem;
+            }
+            .nav-links.open{right:0}.nav-toggle{display:block}
+            .hero-content{margin-left:0;padding:0 1.5rem}
+            .systems-header{padding:3rem 1.5rem 0}
+            .sys-card{padding:2.5rem 1.5rem;min-height:auto}
+            .app-grid{grid-template-columns:1fr}
+            .app-item{border-right:none!important}
+            .applications-header{padding:3rem 1.5rem 1.5rem}
+            .findings-header{padding:3rem 1.5rem 0}
+            .finding-text{padding:3rem 1.5rem 2rem}
+            .finding-data{padding:1rem 1.5rem 3rem}
+            .newsletter{padding:4rem 1.5rem}
+            .nl-form{flex-direction:column;width:100%;max-width:300px}
+            .nl-form input{width:100%}
+            .nl-form button{border-left:1px solid rgba(30,40,60,.5);border-top:none}
+            footer{padding:1.5rem;flex-direction:column;gap:.4rem;text-align:center}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Persistent star field behind everything -->
+<canvas id="starField"></canvas>
+
+<nav id="nav">
+    <a href="#" class="nav-brand">Amazed Creative</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="nav-right">
+        <div class="nav-links" id="navLinks">
+            <a href="#systems">Systems</a>
+            <a href="#applications">Applications</a>
+            <a href="#findings">Findings</a>
+            <a href="#build">Build</a>
+        </div>
+        <div class="nav-live"><span class="nav-dot"></span>Scanning</div>
+    </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="panel hero">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-content">
+        <p class="hero-statement">We build <strong>autonomous agent systems</strong> for businesses — scanning, enriching, classifying, investigating, and acting on data. <strong>Built from scratch.</strong> Running daily.</p>
+        <span class="hero-location">Space Coast, FL</span>
+        <a href="#systems" class="hero-cta">Explore <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="scroll-line"></div>
+</section>
+
+<!-- ═══ SYSTEMS ═══ -->
+<section class="systems orbital-divide" id="systems">
+    <div class="systems-header rv">
+        <div class="systems-label">What We Build</div>
+    </div>
+    <div class="systems-grid">
+        <div class="sys-card rv">
+            <div class="sys-card-top">
+                <div class="sys-card-num">01</div>
+                <h3><strong>Intelligence</strong><br>Systems</h3>
+                <p>Autonomous engines that scan data sources, map entity networks, investigate patterns, generate predictions, and publish findings. Our own engine scans 150+ federal portals daily and publishes what it finds.</p>
+            </div>
+            <div class="sys-card-bottom">
+                <span class="sys-tag">Federal Procurement</span>
+                <span class="sys-tag">Defense Spending</span>
+                <span class="sys-tag">Competitive Analysis</span>
+                <span class="sys-tag">Entity Mapping</span>
+                <span class="sys-tag">Predictions</span>
+            </div>
+        </div>
+        <div class="sys-card rv">
+            <div class="sys-card-top">
+                <div class="sys-card-num">02</div>
+                <h3><strong>Business Development</strong><br>Systems</h3>
+                <p>Lead generation pipelines that scan opportunity sources, classify and score matches, enrich with AI analysis, and deliver prioritized targets. Built for a cybersecurity company — 25,000+ leads scanned and scored per pipeline run.</p>
+            </div>
+            <div class="sys-card-bottom">
+                <span class="sys-tag">Lead Generation</span>
+                <span class="sys-tag">Opportunity Scoring</span>
+                <span class="sys-tag">AI Enrichment</span>
+                <span class="sys-tag">Pipeline Automation</span>
+            </div>
+        </div>
+        <div class="sys-card rv">
+            <div class="sys-card-top">
+                <div class="sys-card-num">03</div>
+                <h3><strong>RFP &amp; Proposal</strong><br>Automation</h3>
+                <p>Agents that scan solicitations, extract requirements, pull relevant past performance, draft compliance matrices, and assemble proposal sections. From RFP to draft response — the 40-hour proposal cycle compressed to hours.</p>
+            </div>
+            <div class="sys-card-bottom">
+                <span class="sys-tag">Requirement Extraction</span>
+                <span class="sys-tag">Compliance Matrices</span>
+                <span class="sys-tag">Past Performance</span>
+                <span class="sys-tag">Proposal Drafting</span>
+            </div>
+        </div>
+        <div class="sys-card rv">
+            <div class="sys-card-top">
+                <div class="sys-card-num">04</div>
+                <h3><strong>Creative &amp; Content</strong><br>Systems</h3>
+                <p>Automated research, documentary production briefs, AI sound design direction, newsletter generation, and multi-channel distribution. From raw intelligence to finished content across video, email, social, and podcasts.</p>
+            </div>
+            <div class="sys-card-bottom">
+                <span class="sys-tag">Documentary Production</span>
+                <span class="sys-tag">Sound Design</span>
+                <span class="sys-tag">Newsletter</span>
+                <span class="sys-tag">Social</span>
+                <span class="sys-tag">Video</span>
+            </div>
+        </div>
+        <div class="sys-card rv">
+            <div class="sys-card-top">
+                <div class="sys-card-num">05</div>
+                <h3><strong>Research &amp; Due</strong><br>Diligence</h3>
+                <p>Autonomous investigation systems for M&amp;A screening, background research, financial anomaly detection, competitive analysis, and market intelligence. The agents pull every public source and synthesize what matters.</p>
+            </div>
+            <div class="sys-card-bottom">
+                <span class="sys-tag">M&amp;A Screening</span>
+                <span class="sys-tag">Background Research</span>
+                <span class="sys-tag">Market Intelligence</span>
+                <span class="sys-tag">Financial Analysis</span>
+            </div>
+        </div>
+        <div class="sys-card rv">
+            <div class="sys-card-top">
+                <div class="sys-card-num">06</div>
+                <h3><strong>Custom</strong><br>Operations</h3>
+                <p>Any repeatable process that involves scanning, classifying, or acting on data. Construction permits. Event planning. Weather forecasting. Supply chain tracking. If the data exists, the agents can process it.</p>
+            </div>
+            <div class="sys-card-bottom">
+                <span class="sys-tag">Any Industry</span>
+                <span class="sys-tag">Custom Data Sources</span>
+                <span class="sys-tag">Built From Scratch</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ APPLICATIONS ═══ -->
+<section class="applications orbital-divide" id="applications">
+    <div class="applications-header rv">
+        <div class="applications-label">Applications</div>
+        <p class="applications-sub">The same architecture — scan, classify, investigate, act — applied across industries and functions. Each one is a system we can build.</p>
+    </div>
+    <div class="app-grid">
+        <a href="sectors/government-procurement.html" class="app-item rv"><span class="app-cat">Intelligence</span><h4>Government Procurement</h4><p>Scan SAM.gov, FPDS, USASpending, Grants.gov, state portals. Match opportunities. Track competitors. Flag pricing anomalies.</p></a>
+        <a href="sectors/defense.html" class="app-item space-adjacent rv"><span class="app-cat">Intelligence</span><h4>Defense &amp; National Security</h4><p>Track DoD spending, DOGE impacts, force structure changes, classified-to-unclassified contract patterns, base realignment signals.</p></a>
+        <a href="sectors/competitive-analysis.html" class="app-item rv"><span class="app-cat">Intelligence</span><h4>Competitive Analysis</h4><p>Map competitor wins, losses, pricing, teaming partners, and hiring patterns. Entity graph tracks relationships across thousands of awards.</p></a>
+        <a href="sectors/compliance-regulatory.html" class="app-item rv"><span class="app-cat">Intelligence</span><h4>Compliance &amp; Regulatory</h4><p>Scan Federal Register, state regulatory databases, CMMC updates, CMS rules, FDIC guidance. Auto-flag changes that affect your business.</p></a>
+        <a href="sectors/lead-generation.html" class="app-item rv"><span class="app-cat">Business Dev</span><h4>Lead Generation</h4><p>Scan opportunity sources, classify matches, score win probability, enrich with AI analysis. Deliver prioritized pipelines daily.</p></a>
+        <a href="sectors/recruitment.html" class="app-item rv"><span class="app-cat">Business Dev</span><h4>Recruitment &amp; Hiring</h4><p>Scan job boards, LinkedIn, university postings. Match candidates to roles. Score fit. Draft outreach. Run 200 open positions 24/7.</p></a>
+        <a href="sectors/grants-funding.html" class="app-item rv"><span class="app-cat">Business Dev</span><h4>Grant &amp; Funding</h4><p>Scan Grants.gov, foundation databases, state funding portals. Match organizations to eligible grants. Draft application summaries.</p></a>
+        <a href="sectors/real-estate.html" class="app-item rv"><span class="app-cat">Business Dev</span><h4>Real Estate Intelligence</h4><p>Scan MLS, permit databases, zoning changes, comparable sales. Alert when properties match criteria with comps and analysis done.</p></a>
+        <a href="sectors/rfp-automation.html" class="app-item rv"><span class="app-cat">RFP</span><h4>Proposal Automation</h4><p>Extract requirements from solicitations. Pull past performance. Generate compliance matrices. Draft technical and management sections.</p></a>
+        <div class="app-item rv"><span class="app-cat">RFP</span><h4>Bid/No-Bid Analysis</h4><p>Score opportunities against company capabilities, past performance, competitive landscape, and win probability. Auto-recommend pursue or pass.</p></div>
+        <div class="app-item rv"><span class="app-cat">RFP</span><h4>Teaming &amp; Partnerships</h4><p>Query the entity graph for complementary contractors. Score teaming fit. Generate partner outreach with shared past performance references.</p></div>
+        <div class="app-item rv"><span class="app-cat">RFP</span><h4>Capability Statements</h4><p>Auto-generate tailored capability statements per solicitation. Pull relevant contracts, certifications, and differentiators.</p></div>
+        <a href="sectors/documentary-production.html" class="app-item rv"><span class="app-cat">Creative</span><h4>Documentary Production</h4><p>From intelligence finding to three-act production brief — cold open, narrative arc, visual direction, sound design cues, closing line.</p></a>
+        <a href="sectors/edm-music.html" class="app-item rv"><span class="app-cat">Creative</span><h4>AI Sound &amp; Music</h4><p>Score direction per scene. Mood, tempo, silence beats, tension builds. AI music generation cues integrated into every production brief.</p></a>
+        <div class="app-item rv"><span class="app-cat">Creative</span><h4>Newsletter &amp; Email</h4><p>Automated weekly intelligence briefs. Curated findings, predictions, and signals formatted and delivered via Resend. Audience segmentation.</p></div>
+        <div class="app-item rv"><span class="app-cat">Creative</span><h4>Social &amp; Distribution</h4><p>Multi-channel publishing — X threads, LinkedIn posts, email campaigns. Queue management, scheduling, and performance tracking.</p></div>
+        <a href="sectors/patent-ip.html" class="app-item rv"><span class="app-cat">Research</span><h4>Patent &amp; IP Monitoring</h4><p>Scan USPTO, international patent databases. Track competitor filings. Alert on expirations that create market openings.</p></a>
+        <a href="sectors/legal-research.html" class="app-item rv"><span class="app-cat">Research</span><h4>Legal Research</h4><p>Scan case law, court filings, regulatory actions. Auto-draft case summaries. Identify relevant precedents by jurisdiction and topic.</p></a>
+        <a href="sectors/market-pricing.html" class="app-item rv"><span class="app-cat">Research</span><h4>Market &amp; Pricing</h4><p>Scan competitor pricing, product launches, feature changes, review sentiment across 10,000+ SKUs or service categories.</p></a>
+        <a href="sectors/insurance-claims.html" class="app-item rv"><span class="app-cat">Research</span><h4>Insurance &amp; Claims</h4><p>Scan claims data, detect fraud patterns, auto-route by complexity, flag anomalies for investigation, draft assessment reports.</p></a>
+        <a href="sectors/supply-chain.html" class="app-item space-adjacent rv"><span class="app-cat">Operations</span><h4>Supply Chain Monitoring</h4><p>Scan supplier networks, pricing databases, disruption alerts. Auto-identify alternative vendors when issues arise.</p></a>
+        <a href="sectors/construction.html" class="app-item rv"><span class="app-cat">Operations</span><h4>Construction &amp; Permits</h4><p>Scan permit databases, building codes, material pricing trends, competitor project wins, municipal project announcements.</p></a>
+        <a href="sectors/agriculture-weather.html" class="app-item space-adjacent rv"><span class="app-cat">Operations</span><h4>Agriculture &amp; Weather</h4><p>NOAA feeds, crop reports, commodity pricing, soil data. Weekly intelligence on weather patterns, planting windows, buy/sell signals.</p></a>
+        <a href="sectors/events-conferences.html" class="app-item rv"><span class="app-cat">Operations</span><h4>Event &amp; Conference</h4><p>Scan conference calendars, speaker movements, sponsorship patterns, venue availability. Industry event budget tracking and opportunity alerts.</p></a>
+    </div>
+</section>
+
+<!-- ═══ FINDINGS — proof the engine works ═══ -->
+<section class="findings orbital-divide" id="findings">
+    <div class="findings-header rv">
+        <div class="findings-label">Intelligence Findings</div>
+        <div class="findings-sub">Output from our autonomous intelligence engine — running daily</div>
+    </div>
+
+    <div class="finding rv">
+        <div class="finding-text">
+            <div class="finding-type">Concentration Analysis</div>
+            <h2>One contractor received <strong>84% of the Department of Energy's entire IT budget.</strong></h2>
+            <p>$2.03 billion to a single vendor. 14 connected programs. Zero competitive awards in three years. Five investigation types flagged it independently. The entity graph confirmed the pattern.</p>
+        </div>
+        <div class="finding-data">
+            <div>
+                <div class="finding-num">84<span style="font-size:.4em;vertical-align:super">%</span></div>
+                <div class="finding-num-sub">Market Concentration</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="finding rv">
+        <div class="finding-text">
+            <div class="finding-type">DOGE Impact Tracker</div>
+            <h2><strong>$61 billion</strong> in contract cancellations. Every one is a recompete window.</h2>
+            <p>13,440 contracts cancelled. Agencies still need the services. The engine tracks every one — replacement timeline, contracting officer, new vehicle status. Displaced incumbents create openings.</p>
+        </div>
+        <div class="finding-data">
+            <div>
+                <div class="finding-num">13,440</div>
+                <div class="finding-num-sub">Contracts Tracked</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="liveFinding"></div>
+</section>
+
+<!-- ═══ NEWSLETTER ═══ -->
+<section class="newsletter orbital-divide rv" id="subscribe">
+    <div class="nl-heading">What the engine found<br><strong>this week.</strong></div>
+    <p class="nl-sub">Investigations, signals, and predictions from the intelligence engine. Delivered every Monday. Free.</p>
+    <div class="nl-form">
+        <input type="email" placeholder="your@email.com" id="nl-email" aria-label="Email">
+        <button type="button" id="nl-btn">Subscribe</button>
+    </div>
+    <div class="nl-note">No spam. Just intelligence.</div>
+</section>
+
+<!-- ═══ BUILD ═══ -->
+<section class="panel build orbital-divide" id="build">
+    <h2 class="rv">Build</h2>
+    <p class="rv">Tell us about your business. We'll show you what an agent system can do for it.</p>
+    <div class="build-location rv">Space Coast, FL</div>
+    <a href="mailto:sean@amazedcreative.com?subject=Build" class="build-cta rv">
+        sean@amazedcreative.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+</section>
+
+<footer>
+    <span>&copy; 2026 Amazed Creative</span>
+    <span class="footer-location">28.3922&deg;N &middot; 80.6077&deg;W</span>
+    <span>Space Coast, FL &middot; <a href="mailto:sean@amazedcreative.com">Contact</a></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPA_URL='https://jfzqgejiryjzeiadfkjr.supabase.co';
+const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmenFnZWppcnlqemVpYWRma2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Nzk0NDEsImV4cCI6MjA4OTM1NTQ0MX0.yLrKnQwnOBnsZd9-U-rO6ATiFbEMlVo9euR5kwZH7CQ';
+const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
+
+/* ═══ PERSISTENT STAR FIELD (drifts slowly, parallax on scroll) ═══ */
+(function(){
+    const c=document.getElementById('starField'),x=c.getContext('2d');
+    let w,h,stars=[];
+    const STAR_COUNT=200;
+    const LAYERS=[
+        {speed:.015,sizeMin:.3,sizeMax:.8,opMin:.15,opMax:.35,parallax:.02},
+        {speed:.03,sizeMin:.5,sizeMax:1.2,opMin:.2,opMax:.5,parallax:.04},
+        {speed:.06,sizeMin:.8,sizeMax:1.8,opMin:.3,opMax:.7,parallax:.07}
+    ];
+
+    function resize(){
+        w=c.width=window.innerWidth;
+        h=c.height=window.innerHeight;
+        if(stars.length===0) initStars();
+    }
+
+    function initStars(){
+        stars=[];
+        for(let i=0;i<STAR_COUNT;i++){
+            const layer=LAYERS[Math.floor(Math.random()*LAYERS.length)];
+            stars.push({
+                x:Math.random()*w,
+                y:Math.random()*h*3,
+                r:layer.sizeMin+Math.random()*(layer.sizeMax-layer.sizeMin),
+                baseOp:layer.opMin+Math.random()*(layer.opMax-layer.opMin),
+                twinkleSpeed:.001+Math.random()*.003,
+                twinklePhase:Math.random()*Math.PI*2,
+                vx:(Math.random()-.5)*layer.speed,
+                vy:(Math.random()-.5)*layer.speed*.5,
+                parallax:layer.parallax,
+                // Slight color variation: most white, some blue-white, rare warm
+                hue:Math.random()>.85?(200+Math.random()*40):(Math.random()>.95?(40+Math.random()*20):0),
+                sat:Math.random()>.85?(Math.random()*20):0
+            });
+        }
+    }
+
+    window.addEventListener('resize',resize);
+    resize();
+
+    let scrollY=0;
+    window.addEventListener('scroll',()=>{scrollY=window.scrollY},{passive:true});
+
+    function draw(){
+        x.clearRect(0,0,w,h);
+        const t=performance.now();
+        for(const s of stars){
+            s.x+=s.vx;
+            s.y+=s.vy;
+            if(s.x<-5)s.x=w+5;if(s.x>w+5)s.x=-5;
+            if(s.y<-5)s.y=h*3+5;if(s.y>h*3+5)s.y=-5;
+
+            // Parallax offset
+            const py=s.y-scrollY*s.parallax;
+            // Only draw if visible
+            const screenY=((py%h)+h)%h;
+
+            const twinkle=Math.sin(t*s.twinkleSpeed+s.twinklePhase)*.3+.7;
+            const op=s.baseOp*twinkle;
+
+            if(s.sat>0){
+                x.fillStyle=`hsla(${s.hue},${s.sat}%,80%,${op})`;
+            }else{
+                x.fillStyle=`rgba(255,255,255,${op})`;
+            }
+            x.beginPath();
+            x.arc(s.x,screenY,s.r,0,Math.PI*2);
+            x.fill();
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+
+/* ═══ HERO CANVAS — deep space constellation map ═══ */
+(function(){
+    const c=document.getElementById('heroCanvas'),x=c.getContext('2d');
+    let w,h,nodes=[],mouse={x:-9999,y:-9999};
+
+    function resize(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;init()}
+
+    function init(){
+        nodes=[];
+        const count=Math.min(180,Math.floor(w*h/5000));
+        for(let i=0;i<count;i++){
+            // Cluster some nodes to form constellation-like groups
+            const cluster=Math.random()>.6;
+            const cx=cluster?(Math.random()*.6+.2)*w:Math.random()*w;
+            const cy=cluster?(Math.random()*.6+.2)*h:Math.random()*h;
+            const spread=cluster?80:0;
+            nodes.push({
+                x:cx+(Math.random()-.5)*spread*2,
+                y:cy+(Math.random()-.5)*spread*2,
+                vx:(Math.random()-.5)*.12,
+                vy:(Math.random()-.5)*.12,
+                r:Math.random()*1.8+.2,
+                a:.04+Math.random()*.15,
+                p:Math.random()*Math.PI*2,
+                s:.001+Math.random()*.003,
+                // Star classification: most white, some blue-shifted, rare accent-colored
+                type:Math.random()>.92?'accent':(Math.random()>.8?'blue':'white')
+            });
+        }
+    }
+
+    window.addEventListener('resize',resize);resize();
+    window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+
+    let signals=[];
+    setInterval(()=>{
+        if(nodes.length<2)return;
+        const a=nodes[Math.random()*nodes.length|0],b=nodes[Math.random()*nodes.length|0];
+        if(a===b)return;
+        if(Math.hypot(a.x-b.x,a.y-b.y)<200) signals.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,t:0,s:.004+Math.random()*.008});
+    },400);
+
+    function draw(){
+        x.clearRect(0,0,w,h);
+
+        // Draw constellation connections — thin lines like star charts
+        for(let i=0;i<nodes.length;i++){
+            const ni=nodes[i];
+            for(let j=i+1;j<nodes.length;j++){
+                const nj=nodes[j],d=Math.hypot(ni.x-nj.x,ni.y-nj.y);
+                if(d<130){
+                    const alpha=(1-d/130)*.03;
+                    x.strokeStyle=`rgba(140,160,200,${alpha})`;
+                    x.lineWidth=.3;
+                    x.beginPath();x.moveTo(ni.x,ni.y);x.lineTo(nj.x,nj.y);x.stroke();
+                }
+            }
+        }
+
+        // Draw nodes as stars
+        for(const n of nodes){
+            n.x+=n.vx;n.y+=n.vy;n.p+=n.s;
+            if(n.x<-10||n.x>w+10)n.vx*=-1;
+            if(n.y<-10||n.y>h+10)n.vy*=-1;
+
+            const md=Math.hypot(n.x-mouse.x,n.y-mouse.y);
+            const glow=md<200?(.3*(1-md/200)):0;
+            const twinkle=Math.sin(n.p)*.06;
+            const finalAlpha=Math.min(n.a+twinkle+glow,1);
+
+            // Star color based on type
+            if(n.type==='accent'){
+                x.fillStyle=`rgba(78,214,164,${finalAlpha*.7})`;
+            }else if(n.type==='blue'){
+                x.fillStyle=`rgba(160,180,220,${finalAlpha})`;
+            }else{
+                x.fillStyle=`rgba(255,255,255,${finalAlpha})`;
+            }
+
+            x.beginPath();
+            const starR=n.r+glow*3;
+            x.arc(n.x,n.y,starR,0,Math.PI*2);
+            x.fill();
+
+            // Subtle glow for larger stars
+            if(starR>1.5){
+                const grad=x.createRadialGradient(n.x,n.y,0,n.x,n.y,starR*3);
+                if(n.type==='accent'){
+                    grad.addColorStop(0,`rgba(78,214,164,${finalAlpha*.15})`);
+                }else if(n.type==='blue'){
+                    grad.addColorStop(0,`rgba(140,160,220,${finalAlpha*.1})`);
+                }else{
+                    grad.addColorStop(0,`rgba(255,255,255,${finalAlpha*.08})`);
+                }
+                grad.addColorStop(1,'rgba(0,0,0,0)');
+                x.fillStyle=grad;
+                x.beginPath();x.arc(n.x,n.y,starR*3,0,Math.PI*2);x.fill();
+            }
+        }
+
+        // Signal pulses along connections — telemetry traveling between nodes
+        for(let i=signals.length-1;i>=0;i--){
+            const s=signals[i];s.t+=s.s;
+            if(s.t>=1){signals.splice(i,1);continue}
+            const px=s.ax+(s.bx-s.ax)*s.t,py=s.ay+(s.by-s.ay)*s.t;
+            const a=s.t<.5?s.t*2:(1-s.t)*2;
+            x.fillStyle=`rgba(78,214,164,${a*.3})`;
+            x.beginPath();x.arc(px,py,1.2,0,Math.PI*2);x.fill();
+            // Trail
+            const trail=.03;
+            for(let k=1;k<=3;k++){
+                const tt=s.t-trail*k;
+                if(tt<0)continue;
+                const tx=s.ax+(s.bx-s.ax)*tt,ty=s.ay+(s.by-s.ay)*tt;
+                x.fillStyle=`rgba(78,214,164,${a*.1/k})`;
+                x.beginPath();x.arc(tx,ty,.8,0,Math.PI*2);x.fill();
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+
+/* ═══ NAV ═══ */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>80));
+const tog=document.getElementById('navToggle'),lnk=document.getElementById('navLinks');
+tog.addEventListener('click',()=>{tog.classList.toggle('active');lnk.classList.toggle('open')});
+lnk.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{tog.classList.remove('active');lnk.classList.remove('open')}));
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const h=this.getAttribute('href');if(h==='#')return;e.preventDefault();const t=document.querySelector(h);if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-56,behavior:'smooth'})})});
+
+/* ═══ REVEAL ═══ */
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('v')})},{threshold:.05,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+/* ═══ NEWSLETTER ═══ */
+document.getElementById('nl-btn').addEventListener('click',async function(){
+    const el=document.getElementById('nl-email'),email=el.value.trim();
+    if(!email||!email.includes('@'))return;
+    this.textContent='...';
+    try{
+        await sb.from('newsletter_subscribers').upsert({email,source:'website',interests:['brief']},{onConflict:'email'});
+        this.textContent='Done';this.style.color='var(--accent)';el.value='';
+        await sb.from('audit_log').insert({user_email:email,event_type:'newsletter_signup',metadata:{source:'website'}});
+        setTimeout(()=>{this.textContent='Subscribe';this.style.color=''},3000);
+    }catch(e){this.textContent='Error';setTimeout(()=>{this.textContent='Subscribe'},2000)}
+});
+
+/* ═══ LOAD LIVE FINDING ═══ */
+(async function(){
+    try{
+        const{data}=await sb.from('published_content').select('title,summary,content_type,published_at').eq('status','published').order('published_at',{ascending:false}).limit(1);
+        const el=document.getElementById('liveFinding');
+        if(data&&data.length>0){
+            const f=data[0];
+            el.innerHTML=`<div class="finding rv"><div class="finding-text"><div class="finding-type">${f.content_type||'Investigation'}</div><h2><strong>${f.title}</strong></h2><p>${(f.summary||'').substring(0,280)}</p></div><div class="finding-data"><div><div class="finding-num-sub" style="margin-top:0">${f.published_at?new Date(f.published_at).toLocaleDateString('en-US',{month:'long',year:'numeric'}):''}</div></div></div></div>`;
+            el.querySelectorAll('.rv').forEach(r=>obs.observe(r));
+        }
+    }catch(e){console.error(e)}
+})();
+</script>
+</body>
+</html>

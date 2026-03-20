@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentary Production Intelligence — Amazed Creative</title>
+    <meta name="description" content="Autonomous system turning intelligence findings into three-act production briefs with narrative arc, visual direction, and sound design cues.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}:root{--bg:#000;--text:#fff;--dim:#888;--muted:#444;--faint:#222;--accent:#4ed6a4}html{scroll-behavior:smooth;background:#000}body{font-family:'Sora',sans-serif;background:#000;color:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden}::selection{background:rgba(255,255,255,.15)}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2.5rem;height:56px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.85);backdrop-filter:blur(20px)}.nav-brand{font-weight:600;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#fff;text-decoration:none;opacity:.6;transition:opacity .3s}.nav-brand:hover{opacity:1}.nav-right{display:flex;align-items:center;gap:2.5rem}.nav-links{display:flex;gap:2rem}.nav-links a{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .3s;font-weight:400}.nav-links a:hover{color:var(--dim)}.nav-live{display:flex;align-items:center;gap:.4rem;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(78,214,164,.6);animation:pulse 3s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+        .hero-sector{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:0 2rem;position:relative}.hero-sector::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--faint)}.hero-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}.hero-sector h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:800;letter-spacing:-.04em;line-height:.95;text-transform:uppercase;background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.25));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.5rem}.hero-desc{font-size:clamp(.95rem,1.5vw,1.15rem);font-weight:300;color:var(--dim);max-width:600px;line-height:1.8}
+        .sect{border-top:1px solid var(--faint);padding:6rem 3rem}.sect-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem}.sect h2{font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;letter-spacing:-.02em;line-height:1.3;margin-bottom:1.5rem;max-width:700px}.sect h2 strong{font-weight:700}.sect p{font-size:.9rem;color:var(--dim);font-weight:300;line-height:1.8;max-width:660px;margin-bottom:1rem}.sect ul{list-style:none;margin-top:1rem}.sect ul li{font-size:.85rem;color:var(--dim);font-weight:300;line-height:2;padding-left:1.2rem;position:relative}.sect ul li::before{content:'';position:absolute;left:0;top:.55em;width:4px;height:4px;background:var(--accent);border-radius:50%}
+        .data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:2rem}.data-card{border:1px solid var(--faint);padding:1.5rem;transition:background .4s}.data-card:hover{background:rgba(255,255,255,.015)}.data-card h4{font-size:.75rem;font-weight:500;margin-bottom:.4rem}.data-card p{font-size:.7rem;color:var(--dim);font-weight:300;line-height:1.6;margin-bottom:0}.data-card .src-type{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:block}
+        .output-block{border:1px solid var(--faint);padding:2rem;margin-top:1.5rem;margin-bottom:1.5rem;max-width:700px}.output-block h4{font-size:.8rem;font-weight:500;margin-bottom:.8rem}.output-block p{font-size:.8rem;margin-bottom:.5rem}
+        .use-case{border-bottom:1px solid var(--faint);padding:2rem 0}.use-case:last-child{border-bottom:none}.use-case h4{font-size:1rem;font-weight:500;margin-bottom:.6rem}.use-case p{margin-bottom:0}.use-case-num{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.4rem}
+        .newsletter{border-top:1px solid var(--faint);padding:6rem 3rem;display:flex;flex-direction:column;align-items:center;text-align:center}.nl-heading{font-size:clamp(1.8rem,4vw,3rem);font-weight:200;letter-spacing:-.03em;line-height:1.1;margin-bottom:.6rem}.nl-heading strong{font-weight:700}.nl-sub{font-size:.95rem;font-weight:300;color:var(--dim);max-width:420px;line-height:1.7;margin-bottom:2rem}.nl-form{display:flex;gap:0}.nl-form input{font-family:'Sora',sans-serif;font-size:.8rem;font-weight:300;background:transparent;border:1px solid var(--faint);color:#fff;padding:.7rem 1rem;outline:none;width:260px;transition:border-color .3s}.nl-form input::placeholder{color:var(--muted)}.nl-form input:focus{border-color:var(--dim)}.nl-form button{font-family:'Sora',sans-serif;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;font-weight:400;background:transparent;border:1px solid var(--faint);border-left:none;color:var(--muted);padding:.7rem 1.2rem;cursor:pointer;transition:all .3s}.nl-form button:hover{color:#fff;border-color:var(--dim)}.nl-note{margin-top:1rem;font-size:.7rem;color:var(--muted);font-weight:300}
+        .build{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;border-top:1px solid var(--faint);padding:2rem}.build h2{font-size:clamp(3.5rem,9vw,7rem);font-weight:800;letter-spacing:-.05em;text-transform:uppercase;text-align:center;background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.15));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:.95}.build p{font-size:1rem;font-weight:300;color:var(--muted);text-align:center;max-width:460px;line-height:1.8}.build-cta{display:inline-flex;align-items:center;gap:.6rem;margin-top:1.5rem;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .4s;border:1px solid var(--faint);padding:.7rem 1.8rem}.build-cta:hover{color:#fff;border-color:var(--dim)}.build-cta svg{width:12px;height:12px;transition:transform .3s}.build-cta:hover svg{transform:translateX(3px)}
+        footer{border-top:1px solid var(--faint);padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center}footer span{font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}footer a{color:var(--faint);text-decoration:none;transition:color .3s}footer a:hover{color:var(--muted)}
+        .rv{opacity:0;transform:translateY(20px);transition:opacity 1s cubic-bezier(0.16,1,0.3,1),transform 1s cubic-bezier(0.16,1,0.3,1)}.rv.v{opacity:1;transform:translateY(0)}
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;width:22px;height:14px;position:relative}.nav-toggle span{display:block;width:100%;height:1px;background:var(--muted);position:absolute;left:0;transition:all .3s}.nav-toggle span:nth-child(1){top:0}.nav-toggle span:nth-child(2){top:6px}.nav-toggle span:nth-child(3){top:12px}.nav-toggle.active span:nth-child(1){top:6px;transform:rotate(45deg)}.nav-toggle.active span:nth-child(2){opacity:0}.nav-toggle.active span:nth-child(3){top:6px;transform:rotate(-45deg)}
+        @media(max-width:900px){.data-grid{grid-template-columns:1fr 1fr}}
+        @media(max-width:768px){nav{padding:0 1.5rem}.nav-links{position:fixed;top:0;right:-100%;width:200px;height:100vh;flex-direction:column;justify-content:center;background:rgba(0,0,0,.97);backdrop-filter:blur(30px);border-left:1px solid var(--faint);transition:right .3s;padding:2rem;gap:1.5rem}.nav-links.open{right:0}.nav-toggle{display:block}.sect{padding:4rem 1.5rem}.hero-sector{padding:0 1.5rem}.data-grid{grid-template-columns:1fr}.newsletter{padding:4rem 1.5rem}.nl-form{flex-direction:column;width:100%;max-width:300px}.nl-form input{width:100%}.nl-form button{border-left:1px solid var(--faint);border-top:none}footer{padding:1.5rem;flex-direction:column;gap:.4rem;text-align:center}}
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">Amazed Creative</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="nav-right">
+        <div class="nav-links" id="navLinks"><a href="../index.html#systems">Systems</a><a href="../index.html#applications">Applications</a><a href="../index.html#findings">Findings</a><a href="../index.html#build">Build</a></div>
+        <div class="nav-live"><span class="nav-dot"></span>Scanning</div>
+    </div>
+</nav>
+
+<section class="hero-sector">
+    <div class="hero-label">Creative System</div>
+    <h1>Documentary<br>Production</h1>
+    <p class="hero-desc">From raw intelligence finding to complete three-act production brief — cold open, narrative arc, visual direction, sound design cues, and closing line. The research that takes producers weeks, done in hours.</p>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">01 / What The System Does</div>
+    <h2>Turns <strong>data investigations</strong> into production-ready documentary briefs</h2>
+    <p>The documentary production pipeline bridges the gap between intelligence findings and visual storytelling. When the intelligence engine surfaces a compelling finding — spending anomalies, concentration patterns, policy impacts, industry shifts — the production system takes over. It structures the finding into a three-act narrative arc. Act one establishes the world and the stakes. Act two presents the investigation, the data, the characters involved. Act three delivers the implications and what happens next.</p>
+    <p>For each act, the system generates: a scene-by-scene breakdown with suggested visual treatments, a list of b-roll requirements with specific shot descriptions, data visualization specifications for key statistics, interview subject recommendations with suggested questions, sound design direction including mood, tempo, and silence beats, and a voiceover script outline with key lines and transitions. The system also generates AI music generation cues — BPM, key, instrumentation, and emotional arc — that can be fed directly into music generation tools.</p>
+    <p>A documentary brief that would take a research team 2-3 weeks to assemble arrives in 4-6 hours. The creative team focuses on craft — shooting, editing, grading — instead of research.</p>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">02 / Data Sources</div>
+    <h2>The <strong>research inputs</strong> that feed production briefs</h2>
+    <div class="data-grid">
+        <div class="data-card"><span class="src-type">Intelligence</span><h4>Engine Findings</h4><p>Spending anomalies, concentration patterns, entity relationships, predictions, and investigation reports from the autonomous intelligence system.</p></div>
+        <div class="data-card"><span class="src-type">Public Records</span><h4>Government Databases</h4><p>FPDS, USASpending, Federal Register, congressional records, court filings, FOIA responses. Primary source documentation for every claim.</p></div>
+        <div class="data-card"><span class="src-type">Academic</span><h4>Research Papers / Reports</h4><p>Peer-reviewed studies, CRS reports, GAO audits, think tank publications. Expert analysis providing context and credibility.</p></div>
+        <div class="data-card"><span class="src-type">News Archive</span><h4>Media Coverage</h4><p>Historical news coverage of the topic. Timeline reconstruction, prior reporting, and identified gaps in existing coverage.</p></div>
+        <div class="data-card"><span class="src-type">People</span><h4>Expert / Source Database</h4><p>Subject matter experts, whistleblowers, industry analysts, and academic researchers. Contact information and prior statements on the topic.</p></div>
+        <div class="data-card"><span class="src-type">Visual</span><h4>Location / Facility Data</h4><p>Geographic coordinates, satellite imagery references, facility information, and public photo databases for b-roll planning.</p></div>
+        <div class="data-card"><span class="src-type">Legal</span><h4>Court / Regulatory Filings</h4><p>Lawsuit filings, regulatory actions, enforcement records, and settlement documents that add narrative tension and stakes.</p></div>
+        <div class="data-card"><span class="src-type">Social</span><h4>Public Discussion</h4><p>Social media threads, forum discussions, and public commentary showing how the topic resonates with audiences.</p></div>
+        <div class="data-card"><span class="src-type">Audio</span><h4>Music / Sound Libraries</h4><p>Reference tracks, sound design catalogs, and AI music generation parameters. Mood boards for each scene's audio landscape.</p></div>
+    </div>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">03 / What You Get</div>
+    <h2>A <strong>complete production brief</strong> ready for your creative team</h2>
+    <div class="output-block">
+        <h4>Documentary Production Brief</h4>
+        <p>Generated per intelligence finding. Contains: executive summary of the story and why it matters, three-act narrative structure with scene breakdowns, data visualization specifications for key statistics, b-roll shot list with locations and descriptions, interview subject recommendations with background and suggested questions, voiceover script outline with key lines, sound design direction per scene (mood, tempo, dynamics, silence beats), AI music generation cues (BPM, key, instrumentation, emotional arc), and estimated production timeline and resource requirements.</p>
+    </div>
+    <div class="output-block">
+        <h4>Alert Types</h4>
+        <ul>
+            <li><strong>Story Alert</strong> — Intelligence engine surfaces a finding with strong narrative potential. Preliminary story assessment and audience resonance score.</li>
+            <li><strong>Update Trigger</strong> — New data surfaces on an in-production story. Impact analysis on existing narrative and recommended adjustments.</li>
+            <li><strong>Trending Topic</strong> — Social and news signals indicate rising audience interest in a topic the engine has data on. Timing recommendation.</li>
+            <li><strong>Source Available</strong> — A key subject or expert becomes available (public appearance, new publication, social media activity).</li>
+        </ul>
+    </div>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">04 / Use Cases</div>
+    <h2>How production teams use <strong>automated research</strong> to tell better stories faster</h2>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 01</div>
+        <h4>The intelligence engine finds that one contractor controls 84% of a federal agency's IT budget</h4>
+        <p>The production system generates a 12-page brief: cold open with the dollar figure and a single question, act one establishing the agency's mission and IT dependency, act two walking through the data trail — 14 connected programs, zero competitive awards, entity graph showing the relationship network, act three exploring what it means for taxpayers and national security. B-roll list includes agency headquarters, congressional hearing footage references, and data visualization mockups. Sound design calls for tension build through act two with a silence beat before the 84% reveal.</p>
+    </div>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 02</div>
+        <h4>A YouTube channel needs weekly content from government spending investigations</h4>
+        <p>The system generates one production brief per week from the intelligence engine's top finding. Each brief is formatted for 12-18 minute YouTube format: hook in the first 15 seconds, data-driven narrative through the middle, and a cliffhanger or call-to-action close. Thumbnail concepts and title options included. The channel produces consistent weekly content without a dedicated research team.</p>
+    </div>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 03</div>
+        <h4>A news organization needs to turn a FOIA response into a broadcast segment</h4>
+        <p>The system ingests the FOIA documents, extracts key findings, cross-references with public spending data and entity relationships, and generates a broadcast-ready brief: 3-minute segment structure, key quotes from documents, data points for graphics, and suggested interview angles. Research that would take an investigative team days is structured and ready for the producer in hours.</p>
+    </div>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 04</div>
+        <h4>A podcast producer needs deep-dive episode outlines on defense spending topics</h4>
+        <p>The system generates a 60-minute episode outline: topic introduction, data presentation segments, expert interview preparation (with background on each guest and specific questions), listener engagement points, and episode summary. Each outline includes timestamped segment breaks, transition cues, and recommended follow-up topics for future episodes. Production prep time drops from 20 hours to 3.</p>
+    </div>
+</section>
+
+<section class="newsletter rv">
+    <div class="nl-heading">Production intelligence<br><strong>delivered weekly.</strong></div>
+    <p class="nl-sub">Story leads, investigation findings, and production-ready research. Every Monday. Free.</p>
+    <div class="nl-form">
+        <input type="email" placeholder="your@email.com" id="nl-email" aria-label="Email">
+        <button type="button" id="nl-btn">Subscribe</button>
+    </div>
+    <div class="nl-note">No spam. Just intelligence.</div>
+</section>
+
+<section class="build">
+    <h2 class="rv">Build</h2>
+    <p class="rv">Tell us your content focus. We'll generate a production brief from the engine's latest findings.</p>
+    <a href="mailto:sean@amazedcreative.com?subject=Documentary%20Production%20System" class="build-cta rv">
+        sean@amazedcreative.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+</section>
+
+<footer>
+    <span>&copy; 2026 Amazed Creative</span>
+    <span>Space Coast, FL &middot; <a href="mailto:sean@amazedcreative.com">Contact</a></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPA_URL='https://jfzqgejiryjzeiadfkjr.supabase.co';const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmenFnZWppcnlqemVpYWRma2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Nzk0NDEsImV4cCI6MjA4OTM1NTQ0MX0.yLrKnQwnOBnsZd9-U-rO6ATiFbEMlVo9euR5kwZH7CQ';const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
+const tog=document.getElementById('navToggle'),lnk=document.getElementById('navLinks');tog.addEventListener('click',()=>{tog.classList.toggle('active');lnk.classList.toggle('open')});lnk.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{tog.classList.remove('active');lnk.classList.remove('open')}));
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('v')})},{threshold:.05,rootMargin:'0px 0px -40px 0px'});document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+document.getElementById('nl-btn').addEventListener('click',async function(){const el=document.getElementById('nl-email'),email=el.value.trim();if(!email||!email.includes('@'))return;this.textContent='...';try{await sb.from('newsletter_subscribers').upsert({email,source:'sector-documentary',interests:['brief','creative']},{onConflict:'email'});this.textContent='Done';this.style.color='var(--accent)';el.value='';await sb.from('audit_log').insert({user_email:email,event_type:'newsletter_signup',metadata:{source:'sector-documentary'}});setTimeout(()=>{this.textContent='Subscribe';this.style.color=''},3000)}catch(e){this.textContent='Error';setTimeout(()=>{this.textContent='Subscribe'},2000)}});
+</script>
+</body>
+</html>

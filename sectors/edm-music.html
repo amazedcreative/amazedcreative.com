@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDM &amp; Music — Amazed Creative</title>
+    <meta name="description" content="Autonomous agents scanning music platforms, festival lineups, label releases, streaming trends, and artist movements for electronic music intelligence and AI-driven production direction.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}:root{--bg:#000;--text:#fff;--dim:#888;--muted:#444;--faint:#222;--accent:#4ed6a4}html{scroll-behavior:smooth;background:#000}body{font-family:'Sora',sans-serif;background:#000;color:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden}::selection{background:rgba(255,255,255,.15)}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2.5rem;height:56px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.85);backdrop-filter:blur(20px)}.nav-brand{font-weight:600;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#fff;text-decoration:none;opacity:.6;transition:opacity .3s}.nav-brand:hover{opacity:1}.nav-right{display:flex;align-items:center;gap:2.5rem}.nav-links{display:flex;gap:2rem}.nav-links a{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .3s;font-weight:400}.nav-links a:hover{color:var(--dim)}.nav-live{display:flex;align-items:center;gap:.4rem;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(78,214,164,.6);animation:pulse 3s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+        .hero-sector{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:0 2rem;position:relative}.hero-sector::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--faint)}.hero-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}.hero-sector h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:800;letter-spacing:-.04em;line-height:.95;text-transform:uppercase;background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.25));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.5rem}.hero-desc{font-size:clamp(.95rem,1.5vw,1.15rem);font-weight:300;color:var(--dim);max-width:600px;line-height:1.8}
+        .sect{border-top:1px solid var(--faint);padding:6rem 3rem}.sect-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem}.sect h2{font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;letter-spacing:-.02em;line-height:1.3;margin-bottom:1.5rem;max-width:700px}.sect h2 strong{font-weight:700}.sect p{font-size:.9rem;color:var(--dim);font-weight:300;line-height:1.8;max-width:660px;margin-bottom:1rem}.sect ul{list-style:none;margin-top:1rem}.sect ul li{font-size:.85rem;color:var(--dim);font-weight:300;line-height:2;padding-left:1.2rem;position:relative}.sect ul li::before{content:'';position:absolute;left:0;top:.55em;width:4px;height:4px;background:var(--accent);border-radius:50%}
+        .data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:2rem}.data-card{border:1px solid var(--faint);padding:1.5rem;transition:background .4s}.data-card:hover{background:rgba(255,255,255,.015)}.data-card h4{font-size:.75rem;font-weight:500;margin-bottom:.4rem}.data-card p{font-size:.7rem;color:var(--dim);font-weight:300;line-height:1.6;margin-bottom:0}.data-card .src-type{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:block}
+        .output-block{border:1px solid var(--faint);padding:2rem;margin-top:1.5rem;margin-bottom:1.5rem;max-width:700px}.output-block h4{font-size:.8rem;font-weight:500;margin-bottom:.8rem}.output-block p{font-size:.8rem;margin-bottom:.5rem}
+        .use-case{border-bottom:1px solid var(--faint);padding:2rem 0}.use-case:last-child{border-bottom:none}.use-case h4{font-size:1rem;font-weight:500;margin-bottom:.6rem}.use-case p{margin-bottom:0}.use-case-num{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.4rem}
+        .newsletter{border-top:1px solid var(--faint);padding:6rem 3rem;display:flex;flex-direction:column;align-items:center;text-align:center}.nl-heading{font-size:clamp(1.8rem,4vw,3rem);font-weight:200;letter-spacing:-.03em;line-height:1.1;margin-bottom:.6rem}.nl-heading strong{font-weight:700}.nl-sub{font-size:.95rem;font-weight:300;color:var(--dim);max-width:420px;line-height:1.7;margin-bottom:2rem}.nl-form{display:flex;gap:0}.nl-form input{font-family:'Sora',sans-serif;font-size:.8rem;font-weight:300;background:transparent;border:1px solid var(--faint);color:#fff;padding:.7rem 1rem;outline:none;width:260px;transition:border-color .3s}.nl-form input::placeholder{color:var(--muted)}.nl-form input:focus{border-color:var(--dim)}.nl-form button{font-family:'Sora',sans-serif;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;font-weight:400;background:transparent;border:1px solid var(--faint);border-left:none;color:var(--muted);padding:.7rem 1.2rem;cursor:pointer;transition:all .3s}.nl-form button:hover{color:#fff;border-color:var(--dim)}.nl-note{margin-top:1rem;font-size:.7rem;color:var(--muted);font-weight:300}
+        .build{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;border-top:1px solid var(--faint);padding:2rem}.build h2{font-size:clamp(3.5rem,9vw,7rem);font-weight:800;letter-spacing:-.05em;text-transform:uppercase;text-align:center;background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.15));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:.95}.build p{font-size:1rem;font-weight:300;color:var(--muted);text-align:center;max-width:460px;line-height:1.8}.build-cta{display:inline-flex;align-items:center;gap:.6rem;margin-top:1.5rem;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .4s;border:1px solid var(--faint);padding:.7rem 1.8rem}.build-cta:hover{color:#fff;border-color:var(--dim)}.build-cta svg{width:12px;height:12px;transition:transform .3s}.build-cta:hover svg{transform:translateX(3px)}
+        footer{border-top:1px solid var(--faint);padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center}footer span{font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}footer a{color:var(--faint);text-decoration:none;transition:color .3s}footer a:hover{color:var(--muted)}
+        .rv{opacity:0;transform:translateY(20px);transition:opacity 1s cubic-bezier(0.16,1,0.3,1),transform 1s cubic-bezier(0.16,1,0.3,1)}.rv.v{opacity:1;transform:translateY(0)}
+        .nav-toggle{display:none;background:none;border:none;cursor:pointer;width:22px;height:14px;position:relative}.nav-toggle span{display:block;width:100%;height:1px;background:var(--muted);position:absolute;left:0;transition:all .3s}.nav-toggle span:nth-child(1){top:0}.nav-toggle span:nth-child(2){top:6px}.nav-toggle span:nth-child(3){top:12px}.nav-toggle.active span:nth-child(1){top:6px;transform:rotate(45deg)}.nav-toggle.active span:nth-child(2){opacity:0}.nav-toggle.active span:nth-child(3){top:6px;transform:rotate(-45deg)}
+        @media(max-width:900px){.data-grid{grid-template-columns:1fr 1fr}}
+        @media(max-width:768px){nav{padding:0 1.5rem}.nav-links{position:fixed;top:0;right:-100%;width:200px;height:100vh;flex-direction:column;justify-content:center;background:rgba(0,0,0,.97);backdrop-filter:blur(30px);border-left:1px solid var(--faint);transition:right .3s;padding:2rem;gap:1.5rem}.nav-links.open{right:0}.nav-toggle{display:block}.sect{padding:4rem 1.5rem}.hero-sector{padding:0 1.5rem}.data-grid{grid-template-columns:1fr}.newsletter{padding:4rem 1.5rem}.nl-form{flex-direction:column;width:100%;max-width:300px}.nl-form input{width:100%}.nl-form button{border-left:1px solid var(--faint);border-top:none}footer{padding:1.5rem;flex-direction:column;gap:.4rem;text-align:center}}
+    </style>
+</head>
+<body>
+<nav>
+    <a href="../index.html" class="nav-brand">Amazed Creative</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="nav-right">
+        <div class="nav-links" id="navLinks"><a href="../index.html#systems">Systems</a><a href="../index.html#applications">Applications</a><a href="../index.html#findings">Findings</a><a href="../index.html#build">Build</a></div>
+        <div class="nav-live"><span class="nav-dot"></span>Scanning</div>
+    </div>
+</nav>
+
+<section class="hero-sector">
+    <div class="hero-label">Creative System</div>
+    <h1>EDM &amp;<br>Music</h1>
+    <p class="hero-desc">Autonomous agents scanning music platforms, festival lineups, label releases, streaming trends, and artist movements for electronic music intelligence and AI-driven production direction.</p>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">01 / What The System Does</div>
+    <h2>A <strong>music intelligence engine</strong> tracking the electronic music landscape and generating production direction</h2>
+    <p>The EDM intelligence pipeline scans the electronic music ecosystem across three dimensions. The market dimension tracks streaming data, playlist placements, chart movements, and label release schedules across Spotify, Apple Music, Beatport, SoundCloud, and Bandcamp. The event dimension monitors festival lineups, club bookings, tour announcements, and venue programming across 500+ venues and 200+ festivals globally. The production dimension analyzes trending sounds, BPM ranges, key signatures, and production techniques across genre subcategories.</p>
+    <p>For each weekly cycle, the system generates production intelligence: which sounds are emerging, which are peaking, and which are declining. It identifies cross-genre pollination patterns and generates AI music generation cues with specific BPM, key, instrumentation, texture, and arrangement parameters that can be fed directly into tools like Suno, Udio, or Ableton-integrated AI plugins.</p>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">02 / Data Sources</div>
+    <h2>The <strong>data feeds</strong> the system scans continuously</h2>
+    <div class="data-grid">
+        <div class="data-card"><span class="src-type">Streaming</span><h4>Spotify / Apple Music / Beatport</h4><p>Stream counts, playlist additions, chart positions, skip rates, and save ratios. Genre and sub-genre trending data by region.</p></div>
+        <div class="data-card"><span class="src-type">Events</span><h4>Festival / Club Databases</h4><p>Lineup announcements, booking patterns, ticket sales velocity, and venue programming. Artist fee trends and market positioning.</p></div>
+        <div class="data-card"><span class="src-type">Social</span><h4>SoundCloud / Bandcamp / YouTube</h4><p>Independent releases, remix activity, DJ set uploads, and community engagement. Emerging artist identification.</p></div>
+        <div class="data-card"><span class="src-type">Production</span><h4>Splice / Sample Libraries</h4><p>Trending samples, presets, and sound packs. Production technique analysis from top-charting tracks.</p></div>
+        <div class="data-card"><span class="src-type">Industry</span><h4>Label Catalogs / PR Feeds</h4><p>Release schedules, signing announcements, label showcase events, and A&R movement.</p></div>
+        <div class="data-card"><span class="src-type">Analytics</span><h4>Chartmetric / Viberate</h4><p>Cross-platform analytics, audience demographics, geographic streaming distribution, and growth metrics.</p></div>
+        <div class="data-card"><span class="src-type">Radio</span><h4>DJ Mixes / Radio Shows</h4><p>Playlist tracking from major DJ radio shows and mix series. Track identification and play frequency.</p></div>
+        <div class="data-card"><span class="src-type">Sync</span><h4>Music Supervision Databases</h4><p>Sync licensing placements in film, TV, games, and advertising. Demand for specific sounds and moods.</p></div>
+        <div class="data-card"><span class="src-type">AI Tools</span><h4>Suno / Udio / AIVA</h4><p>AI music generation platform capabilities, trending prompts, and output quality benchmarks.</p></div>
+    </div>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">03 / What You Get</div>
+    <h2>A <strong>weekly production brief</strong> with trending sounds, market movements, and AI generation cues</h2>
+    <div class="output-block">
+        <h4>Weekly Brief</h4>
+        <p>Delivered every Monday. Contains: trending sounds and production techniques by sub-genre, streaming velocity data for emerging tracks, festival and booking intelligence, AI music generation cues with specific parameters (BPM, key, instrumentation, texture), sync licensing demand signals, and emerging artist profiles.</p>
+    </div>
+    <div class="output-block">
+        <h4>Alert Types</h4>
+        <ul>
+            <li><strong>Trending Sound</strong> — New production technique or sound design approach gaining traction. Analysis with recreation parameters included.</li>
+            <li><strong>Chart Movement</strong> — Significant chart position change for a tracked genre or artist. Market implications analyzed.</li>
+            <li><strong>Festival Lineup</strong> — Major festival lineup announcement affecting market positioning for tracked genres.</li>
+            <li><strong>Sync Opportunity</strong> — Music supervisor brief matching your production style. Genre, mood, and timing specifications.</li>
+            <li><strong>AI Generation Cue</strong> — New AI music tool capability or trending generation parameters producing commercially viable results.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="sect rv">
+    <div class="sect-label">04 / Use Cases</div>
+    <h2>Specific scenarios where the system <strong>changes the outcome</strong></h2>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 01</div>
+        <h4>A producer needs to identify the next emerging sub-genre before it peaks</h4>
+        <p>The system tracks cross-pollination patterns: when melodic techno producers start incorporating breaks at 138 BPM with UK garage vocal chops, it flags the convergence. Streaming data confirms acceleration. The producer receives specific production parameters and releases into the trend 6-8 weeks before saturation.</p>
+    </div>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 02</div>
+        <h4>A record label needs A&R intelligence to identify unsigned artists gaining momentum</h4>
+        <p>The system scans SoundCloud uploads, Spotify algorithmic playlist additions, and social media growth rates. When an unsigned artist hits velocity thresholds, the system generates a complete artist profile. The label contacts artists 30-60 days before competing labels notice.</p>
+    </div>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 03</div>
+        <h4>A festival promoter needs to optimize their lineup for ticket sales</h4>
+        <p>The system analyzes streaming data, social media reach, touring history, and market saturation. It generates a lineup optimization model maximizing unique audience reach while minimizing conflicts and optimizing artist fee ROI.</p>
+    </div>
+    <div class="use-case">
+        <div class="use-case-num">Scenario 04</div>
+        <h4>An AI music company needs to understand gaps between listener preferences and model capabilities</h4>
+        <p>The system identifies trending music characteristics that AI tools struggle to replicate and quantifies the gap with technical specifications for improvement.</p>
+    </div>
+</section>
+
+<section class="newsletter rv">
+    <div class="nl-heading">Music intelligence<br><strong>delivered weekly.</strong></div>
+    <p class="nl-sub">Trending sounds, market movements, and production intelligence for electronic music. Every Monday. Free.</p>
+    <div class="nl-form">
+        <input type="email" placeholder="your@email.com" id="nl-email" aria-label="Email">
+        <button type="button" id="nl-btn">Subscribe</button>
+    </div>
+    <div class="nl-note">No spam. Just intelligence.</div>
+</section>
+
+<section class="build">
+    <h2 class="rv">Build</h2>
+    <p class="rv">Tell us your production focus. We'll show you what the intelligence engine finds in your corner of electronic music.</p>
+    <a href="mailto:sean@amazedcreative.com?subject=EDM%20Music%20Intelligence%20System" class="build-cta rv">
+        sean@amazedcreative.com <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+</section>
+
+<footer>
+    <span>&copy; 2026 Amazed Creative</span>
+    <span>Space Coast, FL &middot; <a href="mailto:sean@amazedcreative.com">Contact</a></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPA_URL='https://jfzqgejiryjzeiadfkjr.supabase.co';const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmenFnZWppcnlqemVpYWRma2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3Nzk0NDEsImV4cCI6MjA4OTM1NTQ0MX0.yLrKnQwnOBnsZd9-U-rO6ATiFbEMlVo9euR5kwZH7CQ';const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
+const tog=document.getElementById('navToggle'),lnk=document.getElementById('navLinks');tog.addEventListener('click',()=>{tog.classList.toggle('active');lnk.classList.toggle('open')});lnk.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{tog.classList.remove('active');lnk.classList.remove('open')}));
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('v')})},{threshold:.05,rootMargin:'0px 0px -40px 0px'});document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+document.getElementById('nl-btn').addEventListener('click',async function(){const el=document.getElementById('nl-email'),email=el.value.trim();if(!email||!email.includes('@'))return;this.textContent='...';try{await sb.from('newsletter_subscribers').upsert({email,source:'sector-edm-music',interests:['brief','edm-music']},{onConflict:'email'});this.textContent='Done';this.style.color='var(--accent)';el.value='';await sb.from('audit_log').insert({user_email:email,event_type:'newsletter_signup',metadata:{source:'sector-edm-music'}});setTimeout(()=>{this.textContent='Subscribe';this.style.color=''},3000)}catch(e){this.textContent='Error';setTimeout(()=>{this.textContent='Subscribe'},2000)}});
+</script>
+</body>
+</html>
