@@ -356,6 +356,28 @@
             .nl-form button{border-left:1px solid rgba(30,40,60,.5);border-top:none}
             footer{padding:1.5rem;flex-direction:column;gap:.4rem;text-align:center}
         }
+        /* ═══ MOBILE PERF — kill scroll jank on phones ═══
+           Reasons each mobile browser grinds on this page:
+             1. body {background-attachment:fixed} + stacked radial gradients
+                forces a full-viewport recomposite every scroll frame.
+             2. nav.scrolled {backdrop-filter:blur(20px)} forces a live blur
+                of everything beneath the nav on every paint.
+             3. The mobile nav drawer also blurs at 30px.
+             4. The .rv reveal transitions benefit from GPU promotion. */
+        @media(max-width:900px){
+            body{background-attachment:scroll}
+            nav.scrolled{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(4,6,12,.96)}
+            .rv{will-change:opacity,transform}
+            .rv.v{will-change:auto}
+        }
+        @media(max-width:768px){
+            .nav-links{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(4,6,12,.98)}
+        }
+        @media(prefers-reduced-motion:reduce){
+            html{scroll-behavior:auto}
+            .rv{opacity:1;transform:none;transition:none}
+            .nav-dot{animation:none}
+        }
     </style>
 </head>
 <body>
@@ -582,10 +604,13 @@ const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
 
 /* ═══ PERSISTENT STAR FIELD (drifts slowly, parallax on scroll) ═══ */
+const IS_MOBILE=window.matchMedia('(max-width:900px)').matches;
+const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 (function(){
     const c=document.getElementById('starField'),x=c.getContext('2d');
     let w,h,stars=[];
-    const STAR_COUNT=200;
+    // Cut star count in half on mobile to keep per-frame cost low.
+    const STAR_COUNT=IS_MOBILE?80:200;
     const LAYERS=[
         {speed:.015,sizeMin:.3,sizeMax:.8,opMin:.15,opMax:.35,parallax:.02},
         {speed:.03,sizeMin:.5,sizeMax:1.2,opMin:.2,opMax:.5,parallax:.04},
@@ -623,11 +648,27 @@ const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
     resize();
 
     let scrollY=0;
-    window.addEventListener('scroll',()=>{scrollY=window.scrollY},{passive:true});
+    // rAF-throttle the parallax read — on mobile this fires hundreds of times
+    // per second during a flick and each read triggers a layout query.
+    let scrollTick=false;
+    window.addEventListener('scroll',()=>{
+        if(!scrollTick){
+            requestAnimationFrame(()=>{scrollY=window.scrollY;scrollTick=false});
+            scrollTick=true;
+        }
+    },{passive:true});
 
-    function draw(){
+    // Throttle to ~30fps on mobile (human eye can't tell on a drifting
+    // starfield and it halves the GPU cost). Respect reduced-motion.
+    if(REDUCED_MOTION){return}
+    const FRAME_MS=IS_MOBILE?33:16;
+    let lastDraw=0;
+    function draw(now){
+        requestAnimationFrame(draw);
+        if(now-lastDraw<FRAME_MS)return;
+        lastDraw=now;
         x.clearRect(0,0,w,h);
-        const t=performance.now();
+        const t=now;
         for(const s of stars){
             s.x+=s.vx;
             s.y+=s.vy;
@@ -651,21 +692,34 @@ const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
             x.arc(s.x,screenY,s.r,0,Math.PI*2);
             x.fill();
         }
-        requestAnimationFrame(draw);
     }
-    draw();
+    requestAnimationFrame(draw);
 })();
 
 /* ═══ HERO CANVAS — deep space constellation map ═══ */
 (function(){
     const c=document.getElementById('heroCanvas'),x=c.getContext('2d');
     let w,h,nodes=[],mouse={x:-9999,y:-9999};
+    // Pause the canvas when the hero is off-screen. This is THE single
+    // biggest mobile perf win — the inner loop draws O(n²) connections
+    // every rAF tick, so running it while the user scrolls through later
+    // panels is pure GPU waste and competes with the scroll compositor.
+    let visible=true;
+    if('IntersectionObserver' in window){
+        new IntersectionObserver(
+            ([e])=>{visible=e.isIntersecting},
+            {threshold:0}
+        ).observe(c);
+    }
 
     function resize(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;init()}
 
     function init(){
         nodes=[];
-        const count=Math.min(180,Math.floor(w*h/5000));
+        // Drop the node cap hard on mobile so the O(n²) connection loop stays
+        // tractable: 80^2/2 = 3200 checks/frame vs 180^2/2 = 16,200.
+        const cap=IS_MOBILE?80:180;
+        const count=Math.min(cap,Math.floor(w*h/5000));
         for(let i=0;i<count;i++){
             // Cluster some nodes to form constellation-like groups
             const cluster=Math.random()>.6;
@@ -698,19 +752,32 @@ const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
         if(Math.hypot(a.x-b.x,a.y-b.y)<200) signals.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,t:0,s:.004+Math.random()*.008});
     },400);
 
-    function draw(){
+    if(REDUCED_MOTION){return}
+    const HERO_FRAME_MS=IS_MOBILE?33:16;
+    let heroLast=0;
+    // On mobile we skip the O(n²) connection loop entirely — it's a nice
+    // visual on desktop but invisible compared to the jank it causes on a
+    // small viewport, and users can't see the thin lines anyway.
+    const DRAW_CONNECTIONS=!IS_MOBILE;
+    function draw(now){
+        requestAnimationFrame(draw);
+        if(!visible)return;                 // skip work when hero is off-screen
+        if(now-heroLast<HERO_FRAME_MS)return;
+        heroLast=now;
         x.clearRect(0,0,w,h);
 
         // Draw constellation connections — thin lines like star charts
-        for(let i=0;i<nodes.length;i++){
-            const ni=nodes[i];
-            for(let j=i+1;j<nodes.length;j++){
-                const nj=nodes[j],d=Math.hypot(ni.x-nj.x,ni.y-nj.y);
-                if(d<130){
-                    const alpha=(1-d/130)*.03;
-                    x.strokeStyle=`rgba(140,160,200,${alpha})`;
-                    x.lineWidth=.3;
-                    x.beginPath();x.moveTo(ni.x,ni.y);x.lineTo(nj.x,nj.y);x.stroke();
+        if(DRAW_CONNECTIONS){
+            for(let i=0;i<nodes.length;i++){
+                const ni=nodes[i];
+                for(let j=i+1;j<nodes.length;j++){
+                    const nj=nodes[j],d=Math.hypot(ni.x-nj.x,ni.y-nj.y);
+                    if(d<130){
+                        const alpha=(1-d/130)*.03;
+                        x.strokeStyle=`rgba(140,160,200,${alpha})`;
+                        x.lineWidth=.3;
+                        x.beginPath();x.moveTo(ni.x,ni.y);x.lineTo(nj.x,nj.y);x.stroke();
+                    }
                 }
             }
         }
@@ -775,14 +842,25 @@ const sb=window.supabase.createClient(SUPA_URL,SUPA_ANON);
             }
         }
 
-        requestAnimationFrame(draw);
     }
-    draw();
+    requestAnimationFrame(draw);
 })();
 
 /* ═══ NAV ═══ */
 const nav=document.getElementById('nav');
-window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>80));
+// Passive listener + rAF-throttle so this doesn't fight the scroll compositor
+// on mobile. classList.toggle already no-ops when state matches, but the
+// listener itself was non-passive which blocks compositor threading.
+let navScrollTick=false;
+window.addEventListener('scroll',()=>{
+    if(!navScrollTick){
+        requestAnimationFrame(()=>{
+            nav.classList.toggle('scrolled',window.scrollY>80);
+            navScrollTick=false;
+        });
+        navScrollTick=true;
+    }
+},{passive:true});
 const tog=document.getElementById('navToggle'),lnk=document.getElementById('navLinks');
 tog.addEventListener('click',()=>{tog.classList.toggle('active');lnk.classList.toggle('open')});
 lnk.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{tog.classList.remove('active');lnk.classList.remove('open')}));
